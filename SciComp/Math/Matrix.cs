@@ -10,7 +10,7 @@ public class Matrix : IEnumerable<Vector>, IEnumerable, IEquatable<Matrix>
 
     public Matrix(IEnumerable<Vector> columns)
     {
-        if (columns.Any(c => c != columns.ElementAt(0)))
+        if (columns.Any(c => c.Dimension != columns.ElementAt(0).Dimension))
             throw new ArgumentException("");
 
         this.columns = columns.ToArray();
@@ -21,12 +21,21 @@ public class Matrix : IEnumerable<Vector>, IEnumerable, IEquatable<Matrix>
         if (vector.Dimension != transformation.columns.Length)
             throw new ArgumentException("");
 
-        var result = transformation.columns.Select(c => c.Dot(vector));
+        var rows = new List<Vector>();
+
+        for (var i = 0; i < transformation.Rank; i++)
+        {
+            var row = new List<double>();
+            transformation.columns.ToList().ForEach(c => row.Add(c[i]));
+            rows.Add(new Vector(row));
+        }
+
+        var result = rows.Select(c => c.Dot(vector));
         return new Vector(result);
     }
     public static Matrix operator *(Matrix lhs, Matrix rhs)
     {
-        var newBasisVectors = lhs.columns.ToList().Select(c => rhs * c);
+        var newBasisVectors = rhs.columns.ToList().Select(c => lhs * c);
         return new Matrix(newBasisVectors);
     }
 
@@ -38,11 +47,11 @@ public class Matrix : IEnumerable<Vector>, IEnumerable, IEquatable<Matrix>
 
     public bool Equals(Matrix? other)
     {
-        return other is not null && columns.Equals(other.columns);
+        return other is not null && columns.SequenceEqual(other.columns);
     }
     public override bool Equals(object? obj)
     {
-        return obj is not null && Equals(obj as Matrix);
+        return obj is Matrix matrix && Equals(matrix);
     }
 
     public override int GetHashCode()

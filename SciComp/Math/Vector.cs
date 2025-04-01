@@ -73,11 +73,11 @@ public class Vector : IEnumerable<double>, IEnumerable, IEquatable<Vector>
 
     public bool Equals(Vector? other)
     {
-        return other is not null && values.Equals(other.values);
+        return other is not null && values.SequenceEqual(other.values);
     }
     public override bool Equals(object? obj)
     {
-        return obj is not null && Equals(obj as Vector);
+        return obj is Vector vector && Equals(vector);
     }
 
     public override int GetHashCode()
