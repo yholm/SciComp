@@ -6,7 +6,18 @@ public class Molecule : IEquatable<Molecule>
 {
     public Dictionary<Atom, int> Atoms { get; }
 
-    public int Charge => Atoms.Keys.Select(static a => a.Charge).Sum();
+    public int Charge
+    {
+        get
+        {
+            static int delta((int, int) x) => x.Item1 - x.Item2;
+
+            return delta(Atoms.Keys
+                .Select(static a => a.Protons)
+                .Zip(Atoms.Keys.Select(static a => a.Electrons))
+                .Aggregate(static (a, b) => (a.First + b.First, a.Second + b.Second)));
+        }
+    }
     public SIUnit MolarMass => Atoms.Keys.Select(static a => a.MolarMass).Aggregate(static (a, b) => a + b);
 
     private readonly PeriodicTable table;
@@ -76,7 +87,7 @@ public class Molecule : IEquatable<Molecule>
         Atoms.ToList().ForEach(pair =>
         {
             result.Append(pair.Key.Symbol.ToString());
-            result.Append(pair.Value);
+            if (pair.Value > 1) result.Append(pair.Value);
         });
 
         return result.ToString();
