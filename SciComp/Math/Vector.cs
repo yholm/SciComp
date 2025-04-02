@@ -11,7 +11,7 @@ public class Vector : IEnumerable<double>, IEnumerable, IEquatable<Vector>
         this.values = values.ToArray();
     }
 
-    public int Dimension { get => values.Length; }
+    public int Dimension => values.Length;
     public double this[int index]
     {
         get

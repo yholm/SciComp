@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Math\" />
-    <Folder Include="Chemistry\" />
 	<Folder Include="Physics\" />
   </ItemGroup>
 

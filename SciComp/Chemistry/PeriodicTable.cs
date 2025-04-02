@@ -140,8 +140,11 @@ public class PeriodicTable : IReadOnlyDictionary<AtomSymbol, Atom>
     {
         if (!ContainsKey(symbol))
         {
-            atom = Activator.CreateInstance<Atom>();
-            return false;
+            // Reaching this should be impossible
+            // But the interface gods need me to have this in
+            // For some reason
+            throw new Exception("Congratulations, you either found a new element " +
+                "which has not been added to the table or you somehow broke the immutable dictionary");
         }
 
         atom = atoms.First(a => a.Symbol == symbol);
@@ -150,7 +153,7 @@ public class PeriodicTable : IReadOnlyDictionary<AtomSymbol, Atom>
 
     public Atom this[AtomSymbol symbol] { get => atoms.First(a => a.Symbol == symbol); }
 
-    public IEnumerable<AtomSymbol> Keys { get => atoms.Select(a => a.Symbol).ToArray(); }
+    public IEnumerable<AtomSymbol> Keys { get => atoms.Select(a => a.Symbol); }
     public IEnumerable<Atom> Values { get => atoms.AsEnumerable(); }
 
     public int Count { get => atoms.Count; }

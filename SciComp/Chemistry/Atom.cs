@@ -4,7 +4,7 @@ public class Atom
 {
     public string Name { get; }
     public AtomSymbol Symbol { get; }
-    public SIUnit AtomicMass { get => MolarMass / SIUnit.Constants.Avogadros; }
+    public SIUnit AtomicMass => MolarMass / SIUnit.Constants.Avogadros;
     public SIUnit MolarMass { get; }
     private readonly int protons;
     private readonly int electrons;

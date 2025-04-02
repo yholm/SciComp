@@ -6,7 +6,7 @@ public class Matrix : IEnumerable<Vector>, IEnumerable, IEquatable<Matrix>
 {
     private readonly Vector[] columns;
 
-    public int Rank { get => columns[0].Dimension; }
+    public int Rank => columns[0].Dimension;
 
     public Matrix(IEnumerable<Vector> columns)
     {
