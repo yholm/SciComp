@@ -410,4 +410,10 @@ public class SIUnit : IEquatable<SIUnit>, IComparable<SIUnit>
 
         return $"{Value} [{units}]";
     }
+
+    public static class Constants
+    {
+        public static SIUnit Avogadros => 6.02214076e23 / Mole(1);
+
+    }
 }
