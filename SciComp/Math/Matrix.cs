@@ -38,7 +38,14 @@ public class Matrix : IEnumerable<Vector>, IEnumerable, IEquatable<Matrix>
         var newBasisVectors = rhs.columns.ToList().Select(c => lhs * c);
         return new Matrix(newBasisVectors);
     }
-
+    public static Matrix operator *(Matrix matrix, double scalar)
+    {
+        return new Matrix(matrix.columns.Select(c => c * scalar));
+    }
+    public static Matrix operator *(double scalar, Matrix matrix)
+    {
+        return matrix * scalar;
+    }
     public IEnumerator<Vector> GetEnumerator()
     {
         return (IEnumerator<Vector>)columns.GetEnumerator();

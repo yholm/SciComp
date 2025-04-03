@@ -178,7 +178,9 @@ public class SIUnit : IEquatable<SIUnit>, IComparable<SIUnit>
 
     private double GetFactor()
     {
-        return dimensions.Values.Select(static d => d.GetFactor()).ToList().Aggregate(1.0, static (a, b) => a * b);
+        return dimensions.Values
+            .Select(static d => d.GetFactor())
+            .Aggregate(1.0, static (a, b) => a * b);
     }
 
     public Dimension this[DimensionType dimensionType] => dimensions[dimensionType];

@@ -20,11 +20,9 @@ public class Molecule : IEquatable<Molecule>
     }
     public SIUnit MolarMass => Atoms.Keys.Select(static a => a.MolarMass).Aggregate(static (a, b) => a + b);
 
-    private readonly PeriodicTable table;
-
     public Molecule(string name)
     {
-        table = new PeriodicTable();
+        var table = new PeriodicTable();
         Atoms = [];
 
         for (var i = 0; i < name.Length; i++)

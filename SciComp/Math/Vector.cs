@@ -8,7 +8,7 @@ public class Vector : IEnumerable<double>, IEnumerable, IEquatable<Vector>
 
     public Vector(IEnumerable<double> values)
     {
-        this.values = values.ToArray();
+        this.values = [.. values];
     }
 
     public int Dimension => values.Length;
@@ -24,7 +24,12 @@ public class Vector : IEnumerable<double>, IEnumerable, IEquatable<Vector>
 
     public double Magnitude()
     {
-        return System.Math.Sqrt(values.Select(System.Math.Sqrt).Sum());
+        return System.Math.Sqrt(values.Sum(static v => System.Math.Pow(v, 2)));
+    }
+
+    public static double Dist(Vector first, Vector second)
+    {
+        return (first - second).Magnitude();
     }
 
     public double Dot(Vector other)
@@ -38,17 +43,17 @@ public class Vector : IEnumerable<double>, IEnumerable, IEquatable<Vector>
     {
         if (lhs.Dimension != rhs.Dimension)
             throw new ArgumentException("Cannot add two vectors of different dimensions");
-        return new Vector(lhs.values.Zip(rhs.values, static (x, y) => x + y).ToArray());
+        return new Vector([.. lhs.values.Zip(rhs.values, static (x, y) => x + y)]);
     }
     public static Vector operator -(Vector lhs, Vector rhs)
     {
         if (lhs.Dimension != rhs.Dimension)
             throw new ArgumentException("Cannot subtract two vectors of different dimensions");
-        return new Vector(lhs.values.Zip(rhs.values, static (x, y) => x - y).ToArray());
+        return new Vector([.. lhs.values.Zip(rhs.values, static (x, y) => x - y)]);
     }
     public static Vector operator *(Vector vector, double scalar)
     {
-        return new Vector(vector.values.Select(x => x * scalar).ToArray());
+        return new Vector([.. vector.values.Select(x => x * scalar)]);
     }
     public static Vector operator *(double scalar, Vector vector)
     {
