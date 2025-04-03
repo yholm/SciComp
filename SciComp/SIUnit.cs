@@ -415,7 +415,12 @@ public class SIUnit : IEquatable<SIUnit>, IComparable<SIUnit>
 
     public static class Constants
     {
+        public static SIUnit SpeedOfLight => Meter(299_792_458) / Second(1);
+        public static SIUnit Planck => Joule(6.62607015e-34) / Hertz(1);
+        public static SIUnit ReducedPlanck => Planck / (2 * System.Math.PI);
+        public static SIUnit Boltzmann => Joule(1.380649e-23) / Kelvin(1);
+        public static SIUnit Gravitational => 6.67430e-11 * Meter(1).Pow(3) / Kilogram(1) / Second(1).Pow(2);
+        public static SIUnit Cosmological => 1.089e-52 / Meter(1).Pow(2);
         public static SIUnit Avogadros => 6.02214076e23 / Mole(1);
-
     }
 }
