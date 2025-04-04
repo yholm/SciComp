@@ -13,7 +13,7 @@ public class Matrix : IEnumerable<Vector>, IEnumerable, IEquatable<Matrix>
         if (columns.Any(c => c.Dimension != columns.ElementAt(0).Dimension))
             throw new ArgumentException("");
 
-        this.columns = columns.ToArray();
+        this.columns = [.. columns];
     }
 
     public static Vector operator *(Matrix transformation, Vector vector)

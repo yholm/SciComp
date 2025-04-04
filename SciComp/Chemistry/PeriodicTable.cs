@@ -151,12 +151,12 @@ public class PeriodicTable : IReadOnlyDictionary<AtomSymbol, Atom>
         return true;
     }
 
-    public Atom this[AtomSymbol symbol] { get => atoms.First(a => a.Symbol == symbol); }
+    public Atom this[AtomSymbol symbol] => atoms.First(a => a.Symbol == symbol);
 
-    public IEnumerable<AtomSymbol> Keys { get => atoms.Select(a => a.Symbol); }
-    public IEnumerable<Atom> Values { get => atoms.AsEnumerable(); }
+    public IEnumerable<AtomSymbol> Keys => atoms.Select(static a => a.Symbol);
+    public IEnumerable<Atom> Values => atoms.AsEnumerable();
 
-    public int Count { get => atoms.Count; }
+    public int Count => atoms.Count;
 
     public IEnumerator<KeyValuePair<AtomSymbol, Atom>> GetEnumerator()
     {

@@ -10,7 +10,7 @@ public class Molecule : IEquatable<Molecule>
     {
         get
         {
-            static int delta((int, int) x) => x.Item1 - x.Item2;
+            static int delta((int Protons, int Electrons) x) => x.Protons - x.Electrons;
 
             return delta(Atoms.Keys
                 .Select(static a => a.Protons)
