@@ -237,7 +237,7 @@ public class SIUnit : IEquatable<SIUnit>, IComparable<SIUnit>
     {
         return new SIUnit(value, new Dictionary<DimensionType, Dimension>()
         {
-            [DimensionType.Length] = new Dimension(1),
+            [DimensionType.Length] = new Dimension(0),
             [DimensionType.Mass] = new Dimension(0),
             [DimensionType.Time] = new Dimension(0),
             [DimensionType.ElectricCurrent] = new Dimension(0),
