@@ -41,6 +41,59 @@ public class Polynomial : IMathFunc
         return new Polynomial([.. lhs.coefficients.Zip(rhs.coefficients, static (x, y) => x - y)]);
     }
 
+    public static Polynomial Parse(string str)
+    {
+        var parts = str.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var coefficients = new double[parts.Where(static s => !(s == "+") && !(s == "-")).Count()];
+
+        var isNegative = false;
+
+        foreach (var part in parts)
+        {
+            if (part == "+") continue;
+            if (part == "-")
+            {
+                isNegative = true;
+                continue;
+            }
+
+            if (!part.Contains('x'))
+            {
+                if (double.TryParse(part, out var c))
+                {
+                    if (isNegative) c *= -1;
+                    coefficients[0] += c;
+                }
+                else
+                {
+                    throw new FormatException($"Invalid coefficient: {part}");
+                }
+                continue;
+            }
+
+            var monomial = part.Split(['x', '^'], StringSplitOptions.RemoveEmptyEntries);
+            if (monomial.Length == 0) continue;
+
+            if (part[0] == 'x')
+            {
+                var degree = monomial.Length == 1 ? int.Parse(monomial[0]) : 1;
+                var coefficient = isNegative ? -1 : 1;
+                coefficients[degree] += coefficient;
+            }
+            else
+            {
+                var coefficient = double.Parse(monomial[0]);
+                if (isNegative) coefficient *= -1;
+                var degree = monomial.Length > 1 ? int.Parse(monomial[1]) : 1;
+                coefficients[degree] += coefficient;
+            }
+
+            isNegative = false;
+        }
+
+        return new Polynomial([.. coefficients.Reverse()]);
+    }
+
     public override string ToString()
     {
         return coefficients.
@@ -53,6 +106,8 @@ public class Polynomial : IMathFunc
     {
         if (c == 0) return "";
         if (n == 0) return c.ToString();
+        if (c == 1) return n == 1 ? "x" : $"x^{n}";
+        if (c == -1) return n == 1 ? "(-x)" : $"(-x^{n})";
         if (n == 1) return $"{c}x";
         return $"{c}x^{n}";
     }
