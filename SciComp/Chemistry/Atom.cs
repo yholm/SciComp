@@ -1,6 +1,6 @@
 ﻿namespace SciComp.Chemistry;
 
-public class Atom
+public class Atom : IEquatable<Atom>, IFactoryParsable<Atom>
 {
     public string Name { get; }
     public AtomSymbol Symbol { get; }
@@ -17,5 +17,28 @@ public class Atom
         MolarMass = molarMass;
         Protons = (int)Symbol;
         Electrons = (int)Symbol;
+    }
+
+    public static Atom Parse(string str)
+    {
+        if (!Enum.TryParse<AtomSymbol>(str, out var atom))
+            throw new ArgumentException($"Invalid atom symbol: {str}");
+        return new PeriodicTable()[atom];
+    }
+
+    public bool Equals(Atom? other)
+    {
+        return other is not null && Name == other.Name && Symbol == other.Symbol
+            && MolarMass.Equals(other.MolarMass) && Protons == other.Protons && Electrons == other.Electrons;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Atom atom && Equals(atom);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Name, Symbol, MolarMass, Protons, Electrons);
     }
 }

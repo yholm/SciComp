@@ -1,8 +1,6 @@
-﻿using System.Security;
+﻿namespace SciComp.Math;
 
-namespace SciComp.Math;
-
-public class Polynomial : IMathFunc
+public class Polynomial : IMathFunc, IFactoryParsable<Polynomial>
 {
     private readonly double[] coefficients;
     public int Degree => coefficients.Length - 1;

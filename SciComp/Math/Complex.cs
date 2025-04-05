@@ -1,6 +1,6 @@
 ﻿namespace SciComp.Math;
 
-public class Complex : IEquatable<Complex>, IEquatable<double>
+public class Complex : IEquatable<Complex>, IEquatable<double>, IFactoryParsable<Complex>
 {
     public double Real { get; }
     public double Imaginary { get; }
@@ -94,8 +94,53 @@ public class Complex : IEquatable<Complex>, IEquatable<double>
                          / (rhs.Real * lhs.Real + lhs.Imaginary * lhs.Imaginary));
     }
 
+    public static Complex Parse(string str)
+    {
+        var parts = str.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(static s => s.Trim());
+        var realPart = 0.0;
+        var imaginaryPart = 0.0;
+
+        var isNegative = false;
+
+        foreach (var part in parts)
+        {
+            if (part == "+") continue;
+            if (part == "-")
+            {
+                isNegative = true;
+                continue;
+            }
+
+            if (part.Contains('i'))
+            {
+                var imaginaryStr = part.Replace("i", "");
+                if (imaginaryStr == "")
+                    imaginaryPart = 1;
+                else if (double.TryParse(imaginaryStr, out var c))
+                    imaginaryPart = isNegative ? -c : c;
+            }
+            else
+            {
+                if (double.TryParse(part, out var c))
+                {
+                    realPart += isNegative ? -c : c;
+                }
+            }
+
+            isNegative = false;
+        }
+
+        return new Complex(realPart, imaginaryPart);
+    }
+
     public override string ToString()
     {
+        if (Imaginary == 0)
+            return Real.ToString();
+        if (Real == 0)
+            return $"{Imaginary}i";
+        if (Imaginary < 0)
+            return $"{Real} - {-Imaginary}i";
         return $"{Real} + {Imaginary}i";
     }
 }

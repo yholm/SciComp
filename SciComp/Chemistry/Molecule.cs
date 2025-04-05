@@ -2,22 +2,13 @@
 
 namespace SciComp.Chemistry;
 
-public class Molecule : IEquatable<Molecule>
+public class Molecule : IEquatable<Molecule>, IFactoryParsable<Molecule>
 {
     public Dictionary<Atom, int> Atoms { get; }
 
-    public int Charge
-    {
-        get
-        {
-            static int delta((int Protons, int Electrons) x) => x.Protons - x.Electrons;
-
-            return delta(Atoms.Keys
-                .Select(static a => a.Protons)
-                .Zip(Atoms.Keys.Select(static a => a.Electrons))
-                .Aggregate(static (a, b) => (a.First + b.First, a.Second + b.Second)));
-        }
-    }
+    public int Charge => Atoms.Keys
+                .Select(a => a.Charge * Atoms[a])
+                .Aggregate(static (a, b) => a + b);
     public SIUnit MolarMass => Atoms.Keys.Select(static a => a.MolarMass).Aggregate(static (a, b) => a + b);
 
     public Molecule(string name)
@@ -61,6 +52,11 @@ public class Molecule : IEquatable<Molecule>
                 Atoms.Add(table[atom], 1);
             }
         }
+    }
+
+    public static Molecule Parse(string str)
+    {
+        return new Molecule(str);
     }
 
     public override bool Equals(object? obj)
