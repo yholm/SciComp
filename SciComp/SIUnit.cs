@@ -506,5 +506,18 @@ public class SIUnit : IEquatable<SIUnit>, IComparable<SIUnit>, IFactoryParsable<
         public static SIUnit Gravitational => 6.67430e-11 * Meter(1).Pow(3) / Kilogram(1) / Second(1).Pow(2);
         public static SIUnit Cosmological => 1.089e-52 / Meter(1).Pow(2);
         public static SIUnit Avogadros => 6.02214076e23 / Mole(1);
+
+        public static Dictionary<string, SIUnit> Symbols => new()
+        {
+            ["c"] = SpeedOfLight,
+            ["h"] = Planck,
+            ["ħ"] = ReducedPlanck,
+            ["k"] = Boltzmann,
+            ["k_b"] = Boltzmann,
+            ["G"] = Gravitational,
+            ["Λ"] = Cosmological,
+            ["N_A"] = Avogadros,
+
+        };
     }
 }
