@@ -494,7 +494,7 @@ public class SIUnit : IEquatable<SIUnit>, IComparable<SIUnit>, IFactoryParsable<
             units.Append(derivedSymbols[key]);
         }
 
-        return $"{Value} [{units}]";
+        return $"{Value} {units}";
     }
 
     public static class Constants
