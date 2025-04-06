@@ -2,7 +2,7 @@
 
 namespace SciComp;
 
-public class SIUnit : IEquatable<SIUnit>, IComparable<SIUnit>
+public class SIUnit : IEquatable<SIUnit>, IComparable<SIUnit>, IFactoryParsable<SIUnit>
 {
     public double Value { get; private set; }
     readonly Dictionary<DimensionType, Dimension> dimensions;
@@ -224,7 +224,91 @@ public class SIUnit : IEquatable<SIUnit>, IComparable<SIUnit>
         if (!DimensionsEqual(other)) 
             throw new DimensionalMismatchException("Cannot compare units with different dimensions");
         return (Value * GetFactor()).CompareTo(other.Value * other.GetFactor());
+    }
 
+    public static SIUnit Parse(string str)
+    {
+        var parts = str.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (!double.TryParse(parts[0], out var value)) throw new ArgumentException("Invalid SIUnit value");
+        var result = (SIUnit)value;
+
+        var symbols = new Dictionary<string, DimensionType>()
+        {
+            ["m"] = DimensionType.Length,
+            ["g"] = DimensionType.Mass,
+            ["s"] = DimensionType.Time,
+            ["A"] = DimensionType.ElectricCurrent,
+            ["K"] = DimensionType.Temperature,
+            ["mol"] = DimensionType.AmountOfSubstance,
+            ["cd"] = DimensionType.LuminousIntensity
+        };
+        var prefixes = new Dictionary<string, Prefix>()
+        {
+            ["y"] = Prefix.Yocto,
+            ["z"] = Prefix.Zepto,
+            ["a"] = Prefix.Atto,
+            ["f"] = Prefix.Femto,
+            ["p"] = Prefix.Pico,
+            ["n"] = Prefix.Nano,
+            ["μ"] = Prefix.Micro,
+            ["m"] = Prefix.Milli,
+            ["c"] = Prefix.Centi,
+            ["d"] = Prefix.Deci,
+            ["da"] = Prefix.Deca,
+            ["h"] = Prefix.Hecto,
+            ["k"] = Prefix.Kilo,
+            ["M"] = Prefix.Mega,
+            ["G"] = Prefix.Giga,
+            ["T"] = Prefix.Tera,
+            ["P"] = Prefix.Peta,
+            ["E"] = Prefix.Exa,
+            ["Z"] = Prefix.Zetta,
+            ["Y"] = Prefix.Yotta
+        };
+
+        foreach (var part in parts)
+        {
+            if (part == parts[0]) continue;
+            var prefix = Prefix.None;
+            var dimension = DimensionType.Length;
+            var symbol = part;
+            var power = 1;
+
+            for (var i = part.Length - 1; i >= 0; i--)
+            {
+                var start = i;
+
+                if (part.Contains('^'))
+                {
+                    if (part[i] == '^')
+                    {
+                        if (i == 0) throw new ArgumentException("Invalid SIUnit format");
+                        if (!int.TryParse(part[(i + 1)..], out power))
+                            throw new ArgumentException("Invalid SIUnit format");
+                        symbol = part[..i];
+                    }
+                    else continue;
+                }
+                
+
+                while (i > 0 && !symbols.ContainsKey(symbol[i..])) i--;
+                if (!symbols.TryGetValue(symbol[i..], out dimension))
+                    throw new ArgumentException("Invalid SIUnit format");
+                symbol = symbol[..i];
+
+                if (!prefixes.TryGetValue(symbol, out prefix))
+                {
+                    prefix = Prefix.None;
+                }
+            }
+
+            var temp = (SIUnit)1;
+            temp.dimensions[dimension] = new Dimension(power, prefix);
+
+            result *= temp;
+        }
+
+        return result;
     }
 
     public static explicit operator double(SIUnit unit)
