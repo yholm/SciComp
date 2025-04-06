@@ -4,11 +4,16 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	  <PackageId>SciCompLibrary</PackageId>
+	  <Version>1.0.0</Version>
+	  <Authors>Freyja Nyholm</Authors>
+	  <Description>A library for scientific computing</Description>
+	  <PackageTags>math, chemistry, physics, library</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-	<Folder Include="Physics\" />
-	<None Include="..\README.md" Pack="true" PackagePath="\"/>
+    <Folder Include="Physics\" />
+	<None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <PropertyGroup>
