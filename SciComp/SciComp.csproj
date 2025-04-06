@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	  <PackageId>SciCompLibrary</PackageId>
+	  <PackageId>SciComp</PackageId>
 	  <Version>1.0.0</Version>
 	  <Authors>Freyja Nyholm</Authors>
 	  <Description>A library for scientific computing</Description>
