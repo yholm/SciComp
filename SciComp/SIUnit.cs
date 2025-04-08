@@ -153,10 +153,10 @@ public class SIUnit : IEquatable<SIUnit>, IComparable<SIUnit>, IFactoryParsable<
 
     public void SetPrefix(DimensionType dimension, Prefix prefix)
     {
-        var oldFactor = this[dimension].GetFactor();
+        var oldFactor = GetFactor();
         this[dimension].Prefix = prefix;
-        var newFactor = this[dimension].GetFactor();
-        Value = newFactor * Value / oldFactor;
+        var newFactor = GetFactor();
+        Value = oldFactor * Value / newFactor;
     }
 
     public SIUnit Pow(int exponent)
@@ -300,6 +300,8 @@ public class SIUnit : IEquatable<SIUnit>, IComparable<SIUnit>, IFactoryParsable<
                 {
                     prefix = Prefix.None;
                 }
+
+                break;
             }
 
             var temp = (SIUnit)1;
@@ -383,7 +385,10 @@ public class SIUnit : IEquatable<SIUnit>, IComparable<SIUnit>, IFactoryParsable<
 
         foreach (var (type, dimension) in lhs.dimensions) 
         {
-            result.SetPrefix(type, dimension.Prefix);
+            if (dimension.Prefix != Prefix.None)
+                result.SetPrefix(type, dimension.Prefix);
+            else
+                result.SetPrefix(type, rhs[type].Prefix);
         }
 
         return result;
