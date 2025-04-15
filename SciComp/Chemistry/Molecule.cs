@@ -54,6 +54,11 @@ public class Molecule : IEquatable<Molecule>, IFactoryParsable<Molecule>
         }
     }
 
+    internal Molecule(Dictionary<Atom, int> atoms)
+    {
+        Atoms = atoms;
+    }
+
     public static Molecule Parse(string str)
     {
         return new Molecule(str);
@@ -67,6 +72,19 @@ public class Molecule : IEquatable<Molecule>, IFactoryParsable<Molecule>
     public bool Equals(Molecule? other)
     {
         return other is not null && Atoms.SequenceEqual(other.Atoms);
+    }
+
+    public static Molecule operator +(Molecule lhs, Atom rhs)
+    {
+        var newAtoms = new Dictionary<Atom, int>(lhs.Atoms);
+        if (newAtoms.TryGetValue(rhs, out var value))
+            newAtoms[rhs] = value++;
+        else newAtoms.Add(rhs, 1);
+        return new Molecule(newAtoms);
+    }
+    public static Molecule operator +(Atom lhs, Molecule rhs)
+    {
+        return rhs + lhs;
     }
 
     public override int GetHashCode()

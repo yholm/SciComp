@@ -41,4 +41,13 @@ public class Atom : IEquatable<Atom>, IFactoryParsable<Atom>
     {
         return HashCode.Combine(Name, Symbol, MolarMass, Protons, Electrons);
     }
+
+    public static Molecule operator +(Atom lhs, Atom rhs)
+    {
+        return new Molecule(new Dictionary<Atom, int>
+        {
+            { lhs, 1 },
+            { rhs, 1 }
+        });
+    }
 }
